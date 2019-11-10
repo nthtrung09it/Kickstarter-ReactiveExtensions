@@ -1,7 +1,6 @@
 import ReactiveSwift
 
 public extension SignalProducer {
-
   /**
    Starts the producer, collects all the values emitted until it completes, and returns an array of all
    values emitted.
@@ -11,7 +10,12 @@ public extension SignalProducer {
 
    - returns: All values emitted by the signal producer.
    */
-  public func allValues() -> [Value] {
-    return self.producer.collect().last()?.value ?? []
+  func allValues() -> [Value] {
+    if let result = self.producer.collect().last() {
+      if let values = try? result.get() {
+        return values
+      }
+    }
+    return []
   }
 }
